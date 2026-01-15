@@ -4,26 +4,28 @@
 
 **AI-powered Google Apps Script management for Claude, Cursor, and other MCP clients**
 
-Google's vision: *"Automate & extend Google Workspace"* and *"Power your scripts with AI."*
-This MCP makes that real — manage, write, deploy, and execute Apps Script projects through natural conversation.
+## What Google Wants You to Build
 
-## Why This Exists
+[Google promotes Apps Script](https://developers.google.com/apps-script/) for:
 
-| Traditional Workflow | With Apps Script MCP |
-|---------------------|---------------------|
-| Open browser → script.google.com → find project → edit code → save → deploy → test → repeat | *"Add error handling to my form processor and deploy it"* |
-| Context-switch between IDE, docs, and console | Stay in your AI workflow |
-| Manual copy-paste between ChatGPT and editor | AI writes directly to your scripts |
+- **Workflow automations** — Programmatic tasks across Gmail, Sheets, Docs, Drive
+- **Custom spreadsheet functions** — Extend Sheets with your own formulas
+- **Chat apps** — Conversational interfaces in Google Chat
+- **Add-ons** — Distribute tools via Google Workspace Marketplace
+- **AI integrations** — Connect Gemini and Vertex AI to your workflows
 
-## What You Can Do
+## What This MCP Does
+
+Lets AI build those for you:
 
 ```
-"Show me my Apps Script projects"
-"Create a script that sends weekly expense reports from my spreadsheet"
-"Add a time-based trigger to run syncData every morning at 9am"
-"Deploy my automation to production"
-"Why did my last execution fail?"
+"Create a script that emails me when someone submits my Google Form"
+"Add a custom function to my spreadsheet that validates email addresses"
+"Build a chat app that queries our sales data in Sheets"
+"Write an automation that archives old Drive files monthly"
 ```
+
+No more context-switching between your AI assistant and script.google.com — the AI writes, deploys, and manages your scripts directly.
 
 ## Features
 
