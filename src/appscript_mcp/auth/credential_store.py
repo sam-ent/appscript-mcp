@@ -108,11 +108,18 @@ class SecureCredentialStore(CredentialStore):
         """Ensure the credentials directory exists with secure permissions."""
         self.base_dir.mkdir(parents=True, exist_ok=True)
         # Set directory permissions to 700 (owner only)
-        os.chmod(self.base_dir, stat.S_IRWXU)
-        # Also secure parent directories
+        try:
+            os.chmod(self.base_dir, stat.S_IRWXU)
+        except PermissionError:
+            logger.warning(f"Could not set permissions on {self.base_dir}")
+
+        # Secure parent directory only if we own it
         parent = self.base_dir.parent
-        if parent.exists():
-            os.chmod(parent, stat.S_IRWXU)
+        if parent.exists() and parent.owner() == Path.home().owner():
+            try:
+                os.chmod(parent, stat.S_IRWXU)
+            except PermissionError:
+                pass  # Ignore if we can't chmod parent
 
     def _get_credential_path(self, user_email: str) -> Path:
         """Get the file path for a user's credentials."""
