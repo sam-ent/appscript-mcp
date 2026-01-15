@@ -219,3 +219,44 @@ def clear_pending_flow() -> None:
     """Clear the pending OAuth flow."""
     global _pending_flow
     _pending_flow = None
+
+
+def auth_interactive(port: int = 8080) -> Credentials:
+    """
+    OAuth with local callback server for environments with browser access.
+
+    Opens the default browser, runs a temporary local server to capture
+    the OAuth callback, and saves the credentials automatically.
+
+    Use this when a browser can open on the local machine (native, X11, etc.).
+    For headless environments, use start_auth_flow() + complete_auth_flow() instead.
+
+    Args:
+        port: Local port for the callback server (default: 8080)
+
+    Returns:
+        Valid Credentials object
+
+    Raises:
+        FileNotFoundError: If client_secret.json is not found
+    """
+    client_secret_path = get_client_secret_path()
+
+    if not client_secret_path.exists():
+        raise FileNotFoundError(
+            f"Client secret file not found at {client_secret_path}\n\n"
+            "To configure OAuth credentials:\n"
+            "1. Go to Google Cloud Console > APIs & Services > Credentials\n"
+            "2. Create an OAuth 2.0 Client ID (Desktop application type)\n"
+            "3. Download the JSON file\n"
+            "4. Save it to one of these locations:\n"
+            f"   - {get_credentials_dir() / 'client_secret.json'}\n"
+            "   - ./client_secret.json\n"
+            "   - ~/.secrets/client_secret.json\n"
+            "   - Or set GOOGLE_CLIENT_SECRET_PATH environment variable"
+        )
+
+    flow = InstalledAppFlow.from_client_secrets_file(str(client_secret_path), SCOPES)
+    creds = flow.run_local_server(port=port, open_browser=True)
+    save_credentials(creds)
+    return creds

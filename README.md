@@ -2,71 +2,91 @@
 
 [![Tests](https://github.com/sam-ent/appscript-mcp/actions/workflows/test.yml/badge.svg)](https://github.com/sam-ent/appscript-mcp/actions/workflows/test.yml)
 
-MCP server for Google Apps Script - create, manage, and execute Apps Script projects through natural language.
+**AI-powered Google Apps Script management via [Model Context Protocol](https://modelcontextprotocol.io)**
+
+Google's vision: *"Automate & extend Google Workspace"* and *"Power your scripts with AI."*
+This MCP makes that real — manage, write, deploy, and execute Apps Script projects through natural conversation.
+
+## Why This Exists
+
+| Traditional Workflow | With Apps Script MCP |
+|---------------------|---------------------|
+| Open browser → script.google.com → find project → edit code → save → deploy → test → repeat | *"Add error handling to my form processor and deploy it"* |
+| Context-switch between IDE, docs, and console | Stay in your AI workflow |
+| Manual copy-paste between ChatGPT and editor | AI writes directly to your scripts |
+
+## What You Can Do
+
+```
+"Show me my Apps Script projects"
+"Create a script that sends weekly expense reports from my spreadsheet"
+"Add a time-based trigger to run syncData every morning at 9am"
+"Deploy my automation to production"
+"Why did my last execution fail?"
+```
 
 ## Features
 
-- **Project Management**: List, create, read, and update Apps Script projects
-- **Code Editing**: View and modify script files (JavaScript, HTML, JSON)
-- **Execution**: Run script functions with parameters
-- **Deployments**: Create, list, update, and delete deployments
-- **Monitoring**: View recent script executions and their status
+- **Project Management** — List, create, read, and update Apps Script projects
+- **Code Editing** — View and modify script files (JavaScript, HTML, JSON)
+- **Execution** — Run script functions with parameters
+- **Deployments** — Create, list, update, and delete deployments
+- **Monitoring** — View recent script executions and their status
 
-## Installation
+## Compatibility
+
+Works with any MCP-compatible client:
+- [Claude Desktop](https://claude.ai/download)
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
+- [Cursor](https://cursor.sh)
+- [Other MCP clients](https://modelcontextprotocol.io/clients)
+
+## Quick Start
+
+### 1. Install
 
 ```bash
-# Clone the repository
 git clone https://github.com/sam-ent/appscript-mcp.git
 cd appscript-mcp
-
-# Install with uv (recommended)
-uv sync
-
-# Or install with pip
-pip install -e .
+uv sync  # or: pip install -e .
 ```
 
-## Prerequisites
+### 2. Setup Google Cloud (One-Time)
 
-### 1. Google Cloud Project Setup
+<details>
+<summary><strong>Click to expand setup steps</strong></summary>
 
-Before using the MCP server, configure your Google Cloud project:
+1. **[Enable APIs](https://console.cloud.google.com/flows/enableapi?apiid=script.googleapis.com,drive.googleapis.com)** — Click link, select your project, enable.
 
-**Enable Required APIs**
+2. **[Create OAuth Credentials](https://console.cloud.google.com/apis/credentials)** → Create Credentials → OAuth client ID → Desktop app → Download JSON
 
-Enable these APIs in your Google Cloud Console:
-- [Apps Script API](https://console.cloud.google.com/flows/enableapi?apiid=script.googleapis.com)
-- [Google Drive API](https://console.cloud.google.com/flows/enableapi?apiid=drive.googleapis.com)
+3. **Save credentials:**
+   ```bash
+   mkdir -p ~/.appscript-mcp
+   mv ~/Downloads/client_secret_*.json ~/.appscript-mcp/client_secret.json
+   ```
 
-**Create OAuth Credentials**
+4. **[Add yourself as test user](https://console.cloud.google.com/apis/credentials/consent)** — OAuth consent screen → Test users → Add your email
 
-1. Go to [APIs & Services > Credentials](https://console.cloud.google.com/apis/credentials)
-2. Click "Create Credentials" > "OAuth client ID"
-3. Select "Desktop application" as the application type
-4. Download the JSON file
+</details>
 
-**Save Credentials**
+### 3. Authenticate
 
-Save the downloaded JSON file to one of these locations:
-- `~/.appscript-mcp/client_secret.json` (recommended)
-- `./client_secret.json` (current directory)
-- `~/.secrets/client_secret.json`
-
-Or set the environment variable:
+**If you have a browser** (local machine, X11, etc.):
 ```bash
-export GOOGLE_CLIENT_SECRET_PATH=/path/to/client_secret.json
+appscript-mcp auth
 ```
+Opens your browser, you consent, done.
 
-**Configure OAuth Consent Screen**
+**If headless** (SSH, remote server, container):
+```bash
+appscript-mcp auth --headless
+```
+Prints a URL. Open it in any browser, consent, paste the redirect URL back.
 
-1. Go to [OAuth consent screen](https://console.cloud.google.com/apis/credentials/consent)
-2. Add yourself as a test user (required for unverified apps)
+### 4. Configure MCP Client
 
-### 2. Configure MCP Client
-
-**Claude Desktop**
-
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
+**Claude Desktop** — Add to config (`~/Library/Application Support/Claude/claude_desktop_config.json` on macOS):
 
 ```json
 {
@@ -79,9 +99,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
 }
 ```
 
-**Claude Code**
-
-Add to `~/.mcp.json`:
+**Claude Code** — Add to `~/.mcp.json`:
 
 ```json
 {
@@ -99,15 +117,23 @@ Add to `~/.mcp.json`:
 }
 ```
 
-## Authentication
+### 5. Start Using
 
-On first use, authenticate with Google:
+```
+"List my Apps Script projects"
+"Create a new script called 'Daily Report'"
+"Show me the code in my Daily Report script"
+```
 
-1. Ask the assistant to "authenticate with Google" or use `start_google_auth`
-2. Open the provided URL in your browser
-3. Sign in and authorize the application
-4. Copy the redirect URL (the page will not load - that's expected)
-5. Provide the redirect URL to `complete_google_auth`
+## Authentication Reference
+
+Three ways to authenticate, all produce the same result:
+
+| Method | When to Use |
+|--------|-------------|
+| `appscript-mcp auth` | Local machine with browser access |
+| `appscript-mcp auth --headless` | SSH/remote without local browser |
+| In-conversation (`start_google_auth`) | When you forgot to auth before starting |
 
 Credentials are cached in `~/.appscript-mcp/token.pickle` for future sessions.
 
@@ -145,33 +171,6 @@ Credentials are cached in `~/.appscript-mcp/token.pickle` for future sessions.
 | Tool | Description |
 |------|-------------|
 | `list_script_processes` | View recent script executions |
-
-## Usage Examples
-
-### List Projects
-```
-"Show me my Apps Script projects"
-```
-
-### Create a Project
-```
-"Create a new Apps Script project called 'Email Automation'"
-```
-
-### Add Code to a Project
-```
-"Add a function to my Email Automation script that sends a daily summary email"
-```
-
-### Execute a Function
-```
-"Run the sendDailySummary function in my Email Automation script"
-```
-
-### Deploy
-```
-"Create a production deployment for my Email Automation script"
-```
 
 ## Limitations
 

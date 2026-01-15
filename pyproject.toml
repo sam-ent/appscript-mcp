@@ -30,7 +30,7 @@ dev = [
 ]
 
 [project.scripts]
-appscript-mcp = "appscript_mcp.server:main"
+appscript-mcp = "appscript_mcp.cli:main"
 
 [build-system]
 requires = ["hatchling"]
