@@ -20,7 +20,9 @@ from google.oauth2.credentials import Credentials
 logger = logging.getLogger(__name__)
 
 # Secure credentials directory
-DEFAULT_CREDENTIALS_DIR = Path.home() / ".secrets" / "google-automation-mcp" / "credentials"
+DEFAULT_CREDENTIALS_DIR = (
+    Path.home() / ".secrets" / "google-automation-mcp" / "credentials"
+)
 
 
 class CredentialStore(ABC):

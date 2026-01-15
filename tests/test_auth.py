@@ -145,7 +145,9 @@ class TestClaspIntegration:
             temp_path = f.name
 
         try:
-            with patch("google_automation_mcp.auth.google_auth.CLASP_RC_PATH", Path(temp_path)):
+            with patch(
+                "google_automation_mcp.auth.google_auth.CLASP_RC_PATH", Path(temp_path)
+            ):
                 tokens = get_clasp_tokens()
                 assert tokens is not None
                 assert tokens["access_token"] == "test_access"
@@ -159,7 +161,11 @@ class TestScopes:
 
     def test_scopes_defined(self):
         """Test that required scopes are defined."""
-        from google_automation_mcp.auth.scopes import SCOPES, SCRIPT_SCOPES, DRIVE_SCOPES
+        from google_automation_mcp.auth.scopes import (
+            SCOPES,
+            SCRIPT_SCOPES,
+            DRIVE_SCOPES,
+        )
 
         assert len(SCOPES) > 0
         assert "https://www.googleapis.com/auth/script.projects" in SCRIPT_SCOPES
