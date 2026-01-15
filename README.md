@@ -3,49 +3,32 @@
 [![PyPI](https://img.shields.io/pypi/v/appscript-mcp)](https://pypi.org/project/appscript-mcp/)
 [![Tests](https://github.com/sam-ent/appscript-mcp/actions/workflows/test.yml/badge.svg)](https://github.com/sam-ent/appscript-mcp/actions/workflows/test.yml)
 
-**AI-powered Google Apps Script management for Claude, Cursor, and other MCP clients**
+**Built for AI.** Give Claude a remote control to your Google account. Create, deploy, and run Apps Script automations directly — no copy-paste, no manual setup.
 
-> **Tip:** View this README on [GitHub](https://github.com/sam-ent/appscript-mcp) for copy buttons on code blocks.
+> **Tip:** View on [GitHub](https://github.com/sam-ent/appscript-mcp) for copy buttons on code blocks.
+
+## Why This Exists
+
+Direct Google APIs are designed for software. This MCP is designed for AI.
+
+| | Direct APIs (You code) | This MCP (Claude codes) |
+|---|---|---|
+| **Setup** | Local dev environment, OAuth libraries | One-time auth, Claude handles the rest |
+| **Runtime** | Scripts run on your machine | Scripts run in Google's cloud |
+| **Workflow** | Claude writes → you copy → you debug | Claude writes → Claude deploys → Claude tests |
+| **Triggers** | Need a server running 24/7 | Native Apps Script triggers in the cloud |
+| **Scope** | Limited to specific APIs | Full Apps Script (MailApp, DriveApp, etc.) |
 
 ## What You Can Build
 
-[Apps Script](https://developers.google.com/apps-script/) enables:
-
-- **Workflow automations** — Programmatic tasks across Gmail, Sheets, Docs, Drive
-- **Custom spreadsheet functions** — Extend Sheets with your own formulas
-- **Chat apps** — Conversational interfaces in Google Chat
-- **Add-ons** — Distribute tools via Google Workspace Marketplace
-- **AI integrations** — Connect Gemini and Vertex AI to your workflows
-
-## What This MCP Does
-
-Lets AI build those for you:
-
 ```
-"Create a script that emails me when someone submits my Google Form"
-"Add a custom function to my spreadsheet that validates email addresses"
-"Build a chat app that queries our sales data in Sheets"
-"Write an automation that archives old Drive files monthly"
+"Every day at 9 AM, scan my Invoices folder in Drive, extract totals to this Sheet, and email me a summary"
+"When someone submits my Google Form, generate a Doc from a template and email it to them"
+"Add a custom function to my spreadsheet that validates email formats"
+"Archive Drive files older than 90 days to a backup folder every week"
 ```
 
-No more copy-pasting between your AI chat and script.google.com — the AI writes, deploys, and manages your scripts directly.
-
-## Why Use This?
-
-AI can't interact with web UIs. Without this MCP, the workflow is:
-
-1. AI generates code → 2. You copy it → 3. You paste into script.google.com → 4. You deploy manually → 5. You copy errors back → 6. Repeat
-
-With this MCP, AI has direct API access:
-
-| Without MCP | With MCP |
-|-------------|----------|
-| Copy-paste code snippets | Direct code deployment |
-| Manual deployment clicks | `create_deployment` |
-| Check execution logs manually | `list_script_processes` |
-| Can't see your existing projects | `list_script_projects` |
-| Can't read your current code | `get_script_content` |
-| Debug blindly | `get_script_metrics` shows failures |
+Claude writes the code, deploys it to Google's cloud, and sets up triggers — all running 24/7 without your computer on.
 
 ## Features
 
