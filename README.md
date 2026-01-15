@@ -49,6 +49,12 @@ Claude writes the code, deploys it to Google's cloud, and sets up triggers — a
 
 Claude can see your actual Gmail, Drive, and Sheets data while building automations — no guessing.
 
+**OAuth & Credentials:**
+- **Environment variables** — Configure via `GOOGLE_OAUTH_CLIENT_ID` + `GOOGLE_OAUTH_CLIENT_SECRET` (recommended for Docker/CI)
+- **JSON file fallback** — Or use `client_secret.json` for local dev
+- **Automatic token refresh** — Tokens refresh automatically when expired, no manual intervention
+- **Headless auth** — Full OAuth flow without a browser (`appscript-mcp auth --headless`)
+
 ## Tested With
 
 - **Claude Desktop** — macOS, Windows
@@ -97,17 +103,19 @@ This gives the MCP permission to access your Google Apps Script and Drive APIs o
 
 3. **Configure credentials** (choose one):
 
-   **Option A: Environment variables** (recommended for Docker/CI)
+   **Option A: Environment variables** (recommended)
    ```bash
    export GOOGLE_OAUTH_CLIENT_ID='your-client-id'
    export GOOGLE_OAUTH_CLIENT_SECRET='your-client-secret'
    ```
+   Best for: Docker, CI/CD, cloud deployments, sharing config across machines.
 
    **Option B: JSON file** (simpler for local dev)
    ```bash
    mkdir -p ~/.appscript-mcp
    mv ~/Downloads/client_secret_*.json ~/.appscript-mcp/client_secret.json
    ```
+   Or set `GOOGLE_CLIENT_SECRET_PATH` to a custom location.
 
 4. **[Add yourself as test user](https://console.cloud.google.com/apis/credentials/consent)** — OAuth consent screen → Test users → Add your email
 
