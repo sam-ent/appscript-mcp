@@ -145,8 +145,9 @@ class TestClaspIntegration:
             temp_path = f.name
 
         try:
+            # Patch the clasp module where CLASP_RC_PATH is defined
             with patch(
-                "google_automation_mcp.auth.google_auth.CLASP_RC_PATH", Path(temp_path)
+                "google_automation_mcp.auth.clasp.CLASP_RC_PATH", Path(temp_path)
             ):
                 tokens = get_clasp_tokens()
                 assert tokens is not None

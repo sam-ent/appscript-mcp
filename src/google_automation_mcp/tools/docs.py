@@ -13,41 +13,13 @@ import asyncio
 import logging
 from typing import Optional
 
-from googleapiclient.errors import HttpError
-
 from ..auth.service_adapter import with_docs_service, with_drive_service
+from .error_handler import handle_errors
 
 logger = logging.getLogger(__name__)
 
 
-def _handle_errors(func):
-    """Decorator to handle API errors gracefully."""
-    import functools
-
-    @functools.wraps(func)
-    async def wrapper(*args, **kwargs):
-        try:
-            return await func(*args, **kwargs)
-        except HttpError as e:
-            error_msg = str(e)
-            if e.resp.status == 401:
-                return f"Authentication error: {error_msg}\n\nPlease run start_google_auth to authenticate."
-            elif e.resp.status == 403:
-                return f"Permission denied: {error_msg}"
-            elif e.resp.status == 404:
-                return f"Not found: {error_msg}"
-            else:
-                return f"API error: {error_msg}"
-        except Exception as e:
-            if "No valid credentials" in str(e):
-                return str(e)
-            logger.exception(f"Error in {func.__name__}")
-            return f"Error: {str(e)}"
-
-    return wrapper
-
-
-@_handle_errors
+@handle_errors
 @with_drive_service
 async def search_docs(
     service,
@@ -98,7 +70,7 @@ async def search_docs(
     return "\n".join(output)
 
 
-@_handle_errors
+@handle_errors
 @with_docs_service
 async def get_doc_content(
     service,
@@ -154,7 +126,7 @@ async def get_doc_content(
     return header + body_text
 
 
-@_handle_errors
+@handle_errors
 @with_docs_service
 async def create_doc(
     service,
@@ -202,7 +174,7 @@ async def create_doc(
     return f"Created Google Doc: {title}\nID: {document_id}\nLink: {link}"
 
 
-@_handle_errors
+@handle_errors
 @with_docs_service
 async def modify_doc_text(
     service,
@@ -279,7 +251,7 @@ async def modify_doc_text(
         return f"Inserted text at index {index}\nDocument: {document_id}\nLink: {link}"
 
 
-@_handle_errors
+@handle_errors
 @with_docs_service
 async def append_doc_text(
     service,

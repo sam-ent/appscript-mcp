@@ -14,41 +14,13 @@ import logging
 from datetime import datetime, timedelta
 from typing import Optional
 
-from googleapiclient.errors import HttpError
-
 from ..auth.service_adapter import with_calendar_service
+from .error_handler import handle_errors
 
 logger = logging.getLogger(__name__)
 
 
-def _handle_errors(func):
-    """Decorator to handle API errors gracefully."""
-    import functools
-
-    @functools.wraps(func)
-    async def wrapper(*args, **kwargs):
-        try:
-            return await func(*args, **kwargs)
-        except HttpError as e:
-            error_msg = str(e)
-            if e.resp.status == 401:
-                return f"Authentication error: {error_msg}\n\nPlease run start_google_auth to authenticate."
-            elif e.resp.status == 403:
-                return f"Permission denied: {error_msg}"
-            elif e.resp.status == 404:
-                return f"Not found: {error_msg}"
-            else:
-                return f"API error: {error_msg}"
-        except Exception as e:
-            if "No valid credentials" in str(e):
-                return str(e)
-            logger.exception(f"Error in {func.__name__}")
-            return f"Error: {str(e)}"
-
-    return wrapper
-
-
-@_handle_errors
+@handle_errors
 @with_calendar_service
 async def list_calendars(
     service,
@@ -85,7 +57,7 @@ async def list_calendars(
     return "\n".join(output)
 
 
-@_handle_errors
+@handle_errors
 @with_calendar_service
 async def get_events(
     service,
@@ -173,7 +145,7 @@ async def get_events(
     return "\n".join(output)
 
 
-@_handle_errors
+@handle_errors
 @with_calendar_service
 async def create_event(
     service,
@@ -248,7 +220,7 @@ async def create_event(
     return "\n".join(output)
 
 
-@_handle_errors
+@handle_errors
 @with_calendar_service
 async def delete_event(
     service,
@@ -276,7 +248,7 @@ async def delete_event(
     return f"Deleted event: {event_id} from calendar: {calendar_id}"
 
 
-@_handle_errors
+@handle_errors
 @with_calendar_service
 async def update_event(
     service,

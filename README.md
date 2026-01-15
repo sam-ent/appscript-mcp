@@ -16,7 +16,7 @@ uvx google-automation-mcp auth   # Authenticate (one-time browser sign-in)
 
 That's it. No GCP project setup. Tokens auto-refresh after initial auth.
 
-> **Tip:** After `pip install google-automation-mcp`, use the short alias `gmcp` instead.
+> **Tip:** Use the short alias `gmcp` after installing.
 
 ## Why No GCP Project?
 

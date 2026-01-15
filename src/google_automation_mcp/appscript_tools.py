@@ -1,15 +1,13 @@
 """
 Google Apps Script MCP Tools
 
-All 11 Apps Script tools plus authentication helpers.
+All Apps Script project, deployment, version, process, and metrics tools.
+Authentication tools are in tools/auth_tools.py.
 """
 
 import asyncio
-import functools
 import logging
 from typing import List, Dict, Any, Optional
-
-from googleapiclient.errors import HttpError
 
 from .auth import (
     get_script_service,
@@ -20,113 +18,10 @@ from .auth import (
     get_pending_flow,
     clear_pending_flow,
 )
+# Import directly to avoid circular imports through tools/__init__.py
+from .tools.error_handler import handle_errors
 
 logger = logging.getLogger(__name__)
-
-
-def handle_errors(func):
-    """Decorator to handle API errors gracefully."""
-
-    @functools.wraps(func)
-    async def wrapper(*args, **kwargs):
-        try:
-            return await func(*args, **kwargs)
-        except HttpError as e:
-            error_msg = str(e)
-            if e.resp.status == 401:
-                return f"Authentication error: {error_msg}\n\nPlease run start_google_auth to authenticate."
-            elif e.resp.status == 403:
-                if "accessNotConfigured" in error_msg:
-                    return (
-                        f"API not enabled: {error_msg}\n\n"
-                        "Please enable the Apps Script API and Drive API in your Google Cloud Console:\n"
-                        "- https://console.cloud.google.com/flows/enableapi?apiid=script.googleapis.com\n"
-                        "- https://console.cloud.google.com/flows/enableapi?apiid=drive.googleapis.com"
-                    )
-                return f"Permission denied: {error_msg}"
-            elif e.resp.status == 404:
-                return f"Not found: {error_msg}"
-            else:
-                return f"API error: {error_msg}"
-        except Exception as e:
-            if "No valid credentials" in str(e):
-                return str(e)
-            logger.exception(f"Error in {func.__name__}")
-            return f"Error: {str(e)}"
-
-    return wrapper
-
-
-# ============================================================================
-# Authentication Tools
-# ============================================================================
-
-
-async def start_google_auth() -> str:
-    """
-    Start Google OAuth authentication flow.
-
-    Returns an authorization URL that must be opened in a browser.
-    After authorizing, call complete_google_auth with the redirect URL.
-
-    Returns:
-        str: Instructions with the authorization URL
-    """
-    try:
-        auth_url, flow = start_auth_flow()
-        set_pending_flow(flow)
-
-        return (
-            "Google OAuth Authentication\n"
-            "============================\n\n"
-            "1. Open this URL in your browser:\n\n"
-            f"   {auth_url}\n\n"
-            "2. Sign in and authorize the application\n\n"
-            "3. You will be redirected to http://localhost (page will not load)\n\n"
-            "4. Copy the FULL URL from your browser address bar\n"
-            "   (looks like: http://localhost/?code=4/0A...&scope=...)\n\n"
-            "5. Call complete_google_auth with the redirect URL"
-        )
-    except FileNotFoundError as e:
-        return str(e)
-    except Exception as e:
-        return f"Failed to start authentication: {str(e)}"
-
-
-async def complete_google_auth(redirect_url: str) -> str:
-    """
-    Complete the Google OAuth flow with the redirect URL.
-
-    Args:
-        redirect_url: The full URL from the browser after authorization
-
-    Returns:
-        str: Success or error message
-    """
-    flow = get_pending_flow()
-    if flow is None:
-        return "No pending authentication flow. Please run start_google_auth first."
-
-    try:
-        creds = complete_auth_flow(flow, redirect_url)
-        clear_pending_flow()
-
-        # Get user email to confirm
-        try:
-            from google.oauth2 import id_token
-            from google.auth.transport import requests
-
-            info = id_token.verify_oauth2_token(
-                creds.id_token, requests.Request(), creds.client_id
-            )
-            email = info.get("email", "unknown")
-        except Exception:
-            email = "authenticated user"
-
-        return f"Authentication successful for {email}.\n\nYou can now use all Apps Script tools."
-    except Exception as e:
-        clear_pending_flow()
-        return f"Authentication failed: {str(e)}\n\nPlease run start_google_auth to try again."
 
 
 # ============================================================================

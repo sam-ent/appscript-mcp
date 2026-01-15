@@ -15,7 +15,6 @@ import json
 import jwt
 import logging
 import os
-import subprocess
 from pathlib import Path
 from typing import Optional, Tuple, Dict, Any
 
@@ -28,80 +27,16 @@ from .scopes import get_current_scopes
 from .credential_store import get_credential_store
 from .oauth_config import get_oauth_config
 
+# Import clasp functions from dedicated module
+from .clasp import (
+    is_clasp_installed,
+    is_clasp_authenticated,
+    get_clasp_tokens,
+    run_clasp_login,
+    CLASP_RC_PATH,
+)
+
 logger = logging.getLogger(__name__)
-
-# =============================================================================
-# clasp Integration
-# =============================================================================
-
-CLASP_RC_PATH = Path.home() / ".clasprc.json"
-
-
-def is_clasp_installed() -> bool:
-    """Check if clasp CLI is installed."""
-    try:
-        result = subprocess.run(
-            ["npx", "@google/clasp", "--version"],
-            capture_output=True,
-            text=True,
-            timeout=30,
-        )
-        return result.returncode == 0
-    except (subprocess.TimeoutExpired, FileNotFoundError):
-        return False
-
-
-def is_clasp_authenticated() -> bool:
-    """Check if clasp has valid credentials."""
-    return CLASP_RC_PATH.exists()
-
-
-def get_clasp_tokens() -> Optional[Dict[str, Any]]:
-    """
-    Read tokens from clasp's credential file (~/.clasprc.json).
-
-    Returns:
-        Token dict with access_token, refresh_token, etc. or None if not available.
-    """
-    if not CLASP_RC_PATH.exists():
-        return None
-
-    try:
-        with open(CLASP_RC_PATH, "r") as f:
-            clasp_config = json.load(f)
-
-        token_data = clasp_config.get("token")
-        if not token_data:
-            return None
-
-        return token_data
-    except (json.JSONDecodeError, IOError) as e:
-        logger.warning(f"Failed to read clasp tokens: {e}")
-        return None
-
-
-def run_clasp_login() -> bool:
-    """
-    Run clasp login interactively.
-
-    Returns:
-        True if login succeeded, False otherwise.
-    """
-    try:
-        print("\nOpening browser for Google authentication...")
-        print("(If browser doesn't open, check the terminal for a URL)\n")
-
-        result = subprocess.run(
-            ["npx", "@google/clasp", "login"],
-            timeout=300,  # 5 minute timeout for user interaction
-        )
-        return result.returncode == 0
-    except subprocess.TimeoutExpired:
-        print("\nAuthentication timed out.")
-        return False
-    except FileNotFoundError:
-        print("\nError: Node.js/npx not found. Please install Node.js first.")
-        return False
 
 
 def clasp_tokens_to_credentials(token_data: Dict[str, Any]) -> Optional[Credentials]:

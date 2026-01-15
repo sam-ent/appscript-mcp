@@ -13,42 +13,15 @@ import asyncio
 import io
 import logging
 
-from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload, MediaIoBaseUpload
 
 from ..auth.service_adapter import with_drive_service
+from .error_handler import handle_errors
 
 logger = logging.getLogger(__name__)
 
 
-def _handle_errors(func):
-    """Decorator to handle API errors gracefully."""
-    import functools
-
-    @functools.wraps(func)
-    async def wrapper(*args, **kwargs):
-        try:
-            return await func(*args, **kwargs)
-        except HttpError as e:
-            error_msg = str(e)
-            if e.resp.status == 401:
-                return f"Authentication error: {error_msg}\n\nPlease run start_google_auth to authenticate."
-            elif e.resp.status == 403:
-                return f"Permission denied: {error_msg}"
-            elif e.resp.status == 404:
-                return f"Not found: {error_msg}"
-            else:
-                return f"API error: {error_msg}"
-        except Exception as e:
-            if "No valid credentials" in str(e):
-                return str(e)
-            logger.exception(f"Error in {func.__name__}")
-            return f"Error: {str(e)}"
-
-    return wrapper
-
-
-@_handle_errors
+@handle_errors
 @with_drive_service
 async def search_drive_files(
     service,
@@ -115,7 +88,7 @@ async def search_drive_files(
     return "\n".join(output)
 
 
-@_handle_errors
+@handle_errors
 @with_drive_service
 async def list_drive_items(
     service,
@@ -181,7 +154,7 @@ async def list_drive_items(
     return "\n".join(output)
 
 
-@_handle_errors
+@handle_errors
 @with_drive_service
 async def get_drive_file_content(
     service,
@@ -258,7 +231,7 @@ async def get_drive_file_content(
     return header + body_text
 
 
-@_handle_errors
+@handle_errors
 @with_drive_service
 async def create_drive_file(
     service,
@@ -324,7 +297,7 @@ async def create_drive_file(
     )
 
 
-@_handle_errors
+@handle_errors
 @with_drive_service
 async def create_drive_folder(
     service,
@@ -368,7 +341,7 @@ async def create_drive_folder(
     )
 
 
-@_handle_errors
+@handle_errors
 @with_drive_service
 async def delete_drive_file(
     service,
@@ -396,7 +369,7 @@ async def delete_drive_file(
     return f"Permanently deleted file: {file_id}"
 
 
-@_handle_errors
+@handle_errors
 @with_drive_service
 async def trash_drive_file(
     service,
@@ -424,7 +397,7 @@ async def trash_drive_file(
     return f"Moved to trash: {file_id}"
 
 
-@_handle_errors
+@handle_errors
 @with_drive_service
 async def share_drive_file(
     service,
@@ -476,7 +449,7 @@ async def share_drive_file(
     )
 
 
-@_handle_errors
+@handle_errors
 @with_drive_service
 async def list_drive_permissions(
     service,
@@ -528,7 +501,7 @@ async def list_drive_permissions(
     return "\n".join(output)
 
 
-@_handle_errors
+@handle_errors
 @with_drive_service
 async def remove_drive_permission(
     service,

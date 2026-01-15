@@ -13,41 +13,13 @@ import asyncio
 import logging
 from typing import Optional, List
 
-from googleapiclient.errors import HttpError
-
 from ..auth.service_adapter import with_sheets_service, with_drive_service
+from .error_handler import handle_errors
 
 logger = logging.getLogger(__name__)
 
 
-def _handle_errors(func):
-    """Decorator to handle API errors gracefully."""
-    import functools
-
-    @functools.wraps(func)
-    async def wrapper(*args, **kwargs):
-        try:
-            return await func(*args, **kwargs)
-        except HttpError as e:
-            error_msg = str(e)
-            if e.resp.status == 401:
-                return f"Authentication error: {error_msg}\n\nPlease run start_google_auth to authenticate."
-            elif e.resp.status == 403:
-                return f"Permission denied: {error_msg}"
-            elif e.resp.status == 404:
-                return f"Not found: {error_msg}"
-            else:
-                return f"API error: {error_msg}"
-        except Exception as e:
-            if "No valid credentials" in str(e):
-                return str(e)
-            logger.exception(f"Error in {func.__name__}")
-            return f"Error: {str(e)}"
-
-    return wrapper
-
-
-@_handle_errors
+@handle_errors
 @with_drive_service
 async def list_spreadsheets(
     service,
@@ -103,7 +75,7 @@ async def list_spreadsheets(
     return "\n".join(output)
 
 
-@_handle_errors
+@handle_errors
 @with_sheets_service
 async def get_sheet_values(
     service,
@@ -165,7 +137,7 @@ async def get_sheet_values(
     return "\n".join(output)
 
 
-@_handle_errors
+@handle_errors
 @with_sheets_service
 async def update_sheet_values(
     service,
@@ -224,7 +196,7 @@ async def update_sheet_values(
     )
 
 
-@_handle_errors
+@handle_errors
 @with_sheets_service
 async def create_spreadsheet(
     service,
@@ -295,7 +267,7 @@ async def create_spreadsheet(
     )
 
 
-@_handle_errors
+@handle_errors
 @with_sheets_service
 async def append_sheet_values(
     service,
@@ -356,7 +328,7 @@ async def append_sheet_values(
     )
 
 
-@_handle_errors
+@handle_errors
 @with_sheets_service
 async def get_spreadsheet_metadata(
     service,

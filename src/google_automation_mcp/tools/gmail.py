@@ -16,41 +16,13 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from typing import Optional, List
 
-from googleapiclient.errors import HttpError
-
 from ..auth.service_adapter import with_gmail_service
+from .error_handler import handle_errors
 
 logger = logging.getLogger(__name__)
 
 
-def _handle_errors(func):
-    """Decorator to handle API errors gracefully."""
-    import functools
-
-    @functools.wraps(func)
-    async def wrapper(*args, **kwargs):
-        try:
-            return await func(*args, **kwargs)
-        except HttpError as e:
-            error_msg = str(e)
-            if e.resp.status == 401:
-                return f"Authentication error: {error_msg}\n\nPlease run start_google_auth to authenticate."
-            elif e.resp.status == 403:
-                return f"Permission denied: {error_msg}"
-            elif e.resp.status == 404:
-                return f"Not found: {error_msg}"
-            else:
-                return f"API error: {error_msg}"
-        except Exception as e:
-            if "No valid credentials" in str(e):
-                return str(e)
-            logger.exception(f"Error in {func.__name__}")
-            return f"Error: {str(e)}"
-
-    return wrapper
-
-
-@_handle_errors
+@handle_errors
 @with_gmail_service
 async def search_gmail_messages(
     service,
@@ -124,7 +96,7 @@ async def search_gmail_messages(
     return "\n".join(output)
 
 
-@_handle_errors
+@handle_errors
 @with_gmail_service
 async def get_gmail_message(
     service,
@@ -198,7 +170,7 @@ async def get_gmail_message(
     return "\n".join(output)
 
 
-@_handle_errors
+@handle_errors
 @with_gmail_service
 async def send_gmail_message(
     service,
@@ -251,7 +223,7 @@ async def send_gmail_message(
     return f"Message sent successfully!\nMessage ID: {sent_message.get('id')}\nTo: {to}\nSubject: {subject}"
 
 
-@_handle_errors
+@handle_errors
 @with_gmail_service
 async def list_gmail_labels(
     service,
@@ -302,7 +274,7 @@ async def list_gmail_labels(
     return "\n".join(output)
 
 
-@_handle_errors
+@handle_errors
 @with_gmail_service
 async def modify_gmail_labels(
     service,
