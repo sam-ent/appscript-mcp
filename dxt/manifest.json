@@ -1,5 +1,5 @@
 {
-  "manifest_version": "0.3",
+  "dxt_version": "0.3",
   "name": "google-automation-mcp",
   "display_name": "Google Automation MCP",
   "version": "0.5.2",
