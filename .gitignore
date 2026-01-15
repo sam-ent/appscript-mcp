@@ -53,3 +53,6 @@ Thumbs.db
 
 # uv
 uv.lock
+
+# Internal docs (not published)
+.internal/
