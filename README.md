@@ -32,20 +32,26 @@ Claude writes the code, deploys it to Google's cloud, and sets up triggers — a
 
 ## Features
 
-**Apps Script Management:**
+**Zero-friction Setup:**
+- **No GCP project required** — Uses clasp (Google's official CLI) for OAuth
+- **One-line install** — `uvx appscript-mcp` runs directly from PyPI
+- **Interactive setup wizard** — Detects your environment and guides you through auth
+- **Works out of the box** — No API enabling, no client secrets, no consent screens
+
+**Production-ready Authentication:**
+- **Automatic token refresh** — Never manually refresh tokens
+- **Multi-user support** — Per-user credential storage for team/production use
+- **OAuth 2.1 with PKCE** — Modern, secure auth for multi-user deployments
+- **Secure storage** — Credentials stored with 600 permissions (owner-only)
+- **Flexible auth options** — clasp (easiest), OAuth 2.1 (production), or legacy OAuth
+
+**Full Apps Script Management:**
 - **CRUD** — Create, read, update, delete Apps Script projects
 - **Code Editing** — View and modify script files (JavaScript, HTML, JSON)
 - **Execution** — Run script functions with parameters
 - **Deployments** — Create, list, update, and delete deployments
 - **Versions** — Create and manage immutable version snapshots
 - **Monitoring** — View executions, metrics, and analytics
-
-**Authentication:**
-- **clasp integration** — No GCP project needed, uses Google's official CLI
-- **Multi-user support** — Per-user credential storage for production deployments
-- **OAuth 2.1 with PKCE** — Modern, secure authentication for multi-user scenarios
-- **Automatic token refresh** — Tokens refresh automatically when expired
-- **Secure storage** — Credentials in `~/.secrets/appscript-mcp/credentials/` with 600 permissions
 
 ## Tested With
 
