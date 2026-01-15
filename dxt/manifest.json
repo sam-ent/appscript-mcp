@@ -1,26 +1,75 @@
 {
+  "manifest_version": "0.3",
   "name": "google-automation-mcp",
   "display_name": "Google Automation MCP",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Headless Google Workspace automation for AI - Apps Script, Gmail, Drive, Sheets, Calendar, Docs",
+  "long_description": "MCP server for Google Workspace automation. Uses clasp for OAuth - no GCP project needed. Supports 50 tools across Gmail, Drive, Sheets, Calendar, Docs, and Apps Script.",
   "author": {
-    "name": "Google Automation MCP Contributors"
+    "name": "Google Automation MCP Contributors",
+    "url": "https://github.com/sam-ent/google-automation-mcp"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/sam-ent/google-automation-mcp"
   },
-  "mcp": {
-    "type": "stdio",
-    "command": "node",
-    "args": ["index.js"]
-  },
-  "permissions": {
-    "network": true,
-    "filesystem": {
-      "read": ["~/.clasprc.json", "~/.config/google-automation-mcp"],
-      "write": ["~/.config/google-automation-mcp"]
+  "server": {
+    "type": "node",
+    "entry_point": "index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/index.js"],
+      "env": {
+        "PYTHONUNBUFFERED": "1"
+      }
     }
-  }
+  },
+  "compatibility": {
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  },
+  "tools": [
+    {"name": "search_gmail_messages", "description": "Search Gmail messages"},
+    {"name": "get_gmail_message", "description": "Get Gmail message content"},
+    {"name": "send_gmail_message", "description": "Send Gmail message"},
+    {"name": "list_gmail_labels", "description": "List Gmail labels"},
+    {"name": "modify_gmail_labels", "description": "Modify Gmail labels"},
+    {"name": "search_drive_files", "description": "Search Google Drive files"},
+    {"name": "list_drive_items", "description": "List Drive folder contents"},
+    {"name": "get_drive_file_content", "description": "Get Drive file content"},
+    {"name": "create_drive_file", "description": "Create Drive file"},
+    {"name": "create_drive_folder", "description": "Create Drive folder"},
+    {"name": "delete_drive_file", "description": "Delete Drive file permanently"},
+    {"name": "trash_drive_file", "description": "Move Drive file to trash"},
+    {"name": "share_drive_file", "description": "Share Drive file"},
+    {"name": "list_drive_permissions", "description": "List Drive file permissions"},
+    {"name": "remove_drive_permission", "description": "Remove Drive file permission"},
+    {"name": "list_spreadsheets", "description": "List Google Sheets"},
+    {"name": "get_sheet_values", "description": "Get spreadsheet values"},
+    {"name": "update_sheet_values", "description": "Update spreadsheet values"},
+    {"name": "append_sheet_values", "description": "Append rows to spreadsheet"},
+    {"name": "create_spreadsheet", "description": "Create new spreadsheet"},
+    {"name": "get_spreadsheet_metadata", "description": "Get spreadsheet metadata"},
+    {"name": "list_calendars", "description": "List Google Calendars"},
+    {"name": "get_events", "description": "Get calendar events"},
+    {"name": "create_event", "description": "Create calendar event"},
+    {"name": "update_event", "description": "Update calendar event"},
+    {"name": "delete_event", "description": "Delete calendar event"},
+    {"name": "get_doc_content", "description": "Get Google Doc content"},
+    {"name": "search_docs", "description": "Search Google Docs"},
+    {"name": "create_doc", "description": "Create Google Doc"},
+    {"name": "modify_doc_text", "description": "Modify Google Doc text"},
+    {"name": "append_doc_text", "description": "Append text to Google Doc"},
+    {"name": "list_script_projects", "description": "List Apps Script projects"},
+    {"name": "get_script_project", "description": "Get Apps Script project"},
+    {"name": "create_script_project", "description": "Create Apps Script project"},
+    {"name": "update_script_content", "description": "Update Apps Script content"},
+    {"name": "run_script_function", "description": "Run Apps Script function"},
+    {"name": "start_google_auth", "description": "Start Google OAuth flow"},
+    {"name": "complete_google_auth", "description": "Complete Google OAuth flow"}
+  ],
+  "keywords": ["google", "workspace", "gmail", "drive", "sheets", "calendar", "docs", "apps-script", "automation"]
 }
