@@ -42,6 +42,10 @@ The MCP acts as a security boundary. Your AI agent calls tools; the MCP handles 
 
 ## MCP Client Configuration
 
+**Claude Desktop (One-Click Install):**
+
+Download [`google-automation-mcp.dxt`](https://github.com/sam-ent/google-automation-mcp/releases/latest) and open it. Claude Desktop will install automatically.
+
 **Claude Code** (`~/.mcp.json`):
 ```json
 {
@@ -55,7 +59,7 @@ The MCP acts as a security boundary. Your AI agent calls tools; the MCP handles 
 }
 ```
 
-**Claude Desktop** (`claude_desktop_config.json`):
+**Claude Desktop (Manual)** (`claude_desktop_config.json`):
 ```json
 {
   "mcpServers": {

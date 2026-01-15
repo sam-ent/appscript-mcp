@@ -1,0 +1,12 @@
+{
+  "name": "google-automation-mcp-dxt",
+  "version": "0.5.1",
+  "description": "Node.js wrapper for Google Automation MCP server",
+  "main": "index.js",
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

@@ -1,0 +1,26 @@
+{
+  "name": "google-automation-mcp",
+  "display_name": "Google Automation MCP",
+  "version": "0.5.1",
+  "description": "Headless Google Workspace automation for AI - Apps Script, Gmail, Drive, Sheets, Calendar, Docs",
+  "author": {
+    "name": "Google Automation MCP Contributors"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sam-ent/google-automation-mcp"
+  },
+  "mcp": {
+    "type": "stdio",
+    "command": "node",
+    "args": ["index.js"]
+  },
+  "permissions": {
+    "network": true,
+    "filesystem": {
+      "read": ["~/.clasprc.json", "~/.config/google-automation-mcp"],
+      "write": ["~/.config/google-automation-mcp"]
+    }
+  }
+}
