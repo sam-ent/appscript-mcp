@@ -32,12 +32,22 @@ Claude writes the code, deploys it to Google's cloud, and sets up triggers — a
 
 ## Features
 
+**Apps Script Management:**
 - **CRUD** — Create, read, update, delete Apps Script projects
 - **Code Editing** — View and modify script files (JavaScript, HTML, JSON)
 - **Execution** — Run script functions with parameters
 - **Deployments** — Create, list, update, and delete deployments
 - **Versions** — Create and manage immutable version snapshots
 - **Monitoring** — View executions, metrics, and analytics
+
+**Google Workspace Context** (via [workspace-mcp](https://github.com/taylorwilsdon/google_workspace_mcp)):
+- **Gmail** — Read emails, search, send, manage labels
+- **Drive** — List files, read content, search
+- **Sheets** — Read/write spreadsheet data
+- **Calendar** — View and create events
+- **Docs** — Read and create documents
+
+Claude can see your actual Gmail, Drive, and Sheets data while building automations — no guessing.
 
 ## Tested With
 
@@ -278,6 +288,7 @@ Google enforces rate limits on the Apps Script API. If running many operations, 
 - [x] Version management (create, list, get versions)
 - [x] Execution metrics and analytics
 - [x] PyPI package (`uvx appscript-mcp`)
+- [x] Google Workspace context (Gmail, Drive, Sheets, Calendar, Docs)
 - [ ] Claude Desktop one-click install (DXT)
 
 See [Issues](https://github.com/sam-ent/appscript-mcp/issues) to request features or report bugs.

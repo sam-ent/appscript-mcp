@@ -1,6 +1,6 @@
 [project]
 name = "appscript-mcp"
-version = "0.1.2"
+version = "0.2.0"
 description = "MCP server for Google Apps Script - create, manage, and execute Apps Script projects"
 readme = "README.md"
 license = { text = "MIT" }
@@ -21,6 +21,7 @@ dependencies = [
     "google-api-python-client>=2.0.0",
     "google-auth-oauthlib>=1.0.0",
     "google-auth>=2.0.0",
+    "workspace-mcp>=1.7.1",
 ]
 
 [project.optional-dependencies]

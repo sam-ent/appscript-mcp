@@ -1,11 +1,11 @@
 """
 Apps Script MCP Server
 
-FastMCP server for Google Apps Script operations.
+Unified MCP server combining Apps Script automation with Google Workspace context.
+Built on workspace-mcp for Gmail, Drive, Sheets, Calendar access.
 """
 
 import logging
-from fastmcp import FastMCP
 
 from . import __version__
 from .tools import (
@@ -42,12 +42,30 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Create the MCP server
-mcp = FastMCP("Apps Script MCP")
+# Try to import workspace-mcp's server and tools for Google Workspace context
+_workspace_available = False
+try:
+    from core.server import server as mcp
+
+    # Import workspace-mcp tool modules (auto-registers to their server)
+    from gmail import gmail_tools  # noqa: F401
+    from gdrive import drive_tools  # noqa: F401
+    from gsheets import sheets_tools  # noqa: F401
+    from gcalendar import calendar_tools  # noqa: F401
+    from gdocs import docs_tools  # noqa: F401
+
+    _workspace_available = True
+    logger.info("Google Workspace tools loaded (Gmail, Drive, Sheets, Calendar, Docs)")
+except ImportError as e:
+    # Fallback to standalone mode
+    logger.warning(f"workspace-mcp not available ({e}), running in standalone mode")
+    from fastmcp import FastMCP
+
+    mcp = FastMCP("Apps Script MCP")
 
 
 # ============================================================================
-# Register Authentication Tools
+# Register Apps Script Authentication Tools
 # ============================================================================
 
 
@@ -75,7 +93,7 @@ async def complete_google_auth_tool(redirect_url: str) -> str:
 
 
 # ============================================================================
-# Register Project Tools
+# Register Apps Script Project Tools
 # ============================================================================
 
 
@@ -205,7 +223,7 @@ async def run_script_function_tool(
 
 
 # ============================================================================
-# Register Deployment Tools
+# Register Apps Script Deployment Tools
 # ============================================================================
 
 
@@ -275,7 +293,7 @@ async def delete_deployment_tool(script_id: str, deployment_id: str) -> str:
 
 
 # ============================================================================
-# Register Version Tools
+# Register Apps Script Version Tools
 # ============================================================================
 
 
@@ -327,7 +345,7 @@ async def get_version_tool(script_id: str, version_number: int) -> str:
 
 
 # ============================================================================
-# Register Process Tools
+# Register Apps Script Process Tools
 # ============================================================================
 
 
@@ -350,7 +368,7 @@ async def list_script_processes_tool(
 
 
 # ============================================================================
-# Register Metrics Tools
+# Register Apps Script Metrics Tools
 # ============================================================================
 
 
@@ -635,6 +653,12 @@ async def generate_trigger_code(
 def main():
     """Run the MCP server."""
     logger.info(f"Starting Apps Script MCP Server v{__version__}")
+    if _workspace_available:
+        logger.info(
+            "Running with Google Workspace context (Gmail, Drive, Sheets, Calendar, Docs)"
+        )
+    else:
+        logger.info("Running in standalone mode (Apps Script only)")
     mcp.run()
 
 
