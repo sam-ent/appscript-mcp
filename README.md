@@ -5,6 +5,8 @@
 
 **AI-powered Google Apps Script management for Claude, Cursor, and other MCP clients**
 
+> **Tip:** View this README on [GitHub](https://github.com/sam-ent/appscript-mcp) for copy buttons on code blocks.
+
 ## What You Can Build
 
 [Apps Script](https://developers.google.com/apps-script/) enables:
