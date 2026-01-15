@@ -39,12 +39,14 @@ def main():
 def _run_server():
     """Run the MCP server."""
     from .server import main as server_main
+
     server_main()
 
 
 def _run_setup():
     """Run interactive setup."""
     from .setup import run_setup
+
     success = run_setup()
     sys.exit(0 if success else 1)
 
@@ -133,6 +135,7 @@ def _print_version():
     """Print version."""
     try:
         from importlib.metadata import version
+
         v = version("appscript-mcp")
     except Exception:
         v = "unknown"
@@ -145,7 +148,6 @@ def _auth_clasp(headless: bool = False):
         get_credentials,
         is_clasp_installed,
         run_clasp_login,
-        detect_clasp_environment,
     )
     from .auth.credential_store import get_credential_store
 
@@ -204,12 +206,13 @@ def _auth_clasp(headless: bool = False):
     if success:
         # Import credentials
         from .setup import _import_clasp_credentials
+
         _import_clasp_credentials()
 
 
 def _auth_local_legacy():
     """Browser-based auth with local callback server (legacy method)."""
-    from .auth import get_credentials, auth_interactive
+    from .auth import auth_interactive
     from .auth.credential_store import get_credential_store
 
     store = get_credential_store()
@@ -245,7 +248,7 @@ def _auth_local_legacy():
 
 def _auth_headless_legacy():
     """Manual auth flow for headless environments (legacy method)."""
-    from .auth import start_auth_flow, complete_auth_flow, get_credentials
+    from .auth import start_auth_flow, complete_auth_flow
     from .auth.credential_store import get_credential_store
 
     print("Legacy Headless Authentication (requires GCP project)")

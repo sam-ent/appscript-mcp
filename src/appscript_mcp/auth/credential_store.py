@@ -158,7 +158,9 @@ class SecureCredentialStore(CredentialStore):
             credentials = Credentials(
                 token=creds_data.get("token"),
                 refresh_token=creds_data.get("refresh_token"),
-                token_uri=creds_data.get("token_uri", "https://oauth2.googleapis.com/token"),
+                token_uri=creds_data.get(
+                    "token_uri", "https://oauth2.googleapis.com/token"
+                ),
                 client_id=creds_data.get("client_id"),
                 client_secret=creds_data.get("client_secret"),
                 scopes=creds_data.get("scopes"),

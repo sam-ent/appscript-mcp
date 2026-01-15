@@ -270,7 +270,9 @@ def detect_clasp_environment() -> Dict[str, Any]:
         "clasp_installed": is_clasp_installed(),
         "clasp_version": get_clasp_version(),
         "clasp_authenticated": is_clasp_authenticated(),
-        "clasp_user_email": get_clasp_user_email() if is_clasp_authenticated() else None,
+        "clasp_user_email": get_clasp_user_email()
+        if is_clasp_authenticated()
+        else None,
         "clasprc_path": str(CLASP_RC_PATH),
         "clasprc_exists": CLASP_RC_PATH.exists(),
     }

@@ -7,21 +7,16 @@ and sensible defaults.
 
 import os
 import sys
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 
 from .auth.clasp import (
-    is_node_installed,
-    is_npm_installed,
-    is_clasp_installed,
-    is_clasp_authenticated,
-    get_clasp_user_email,
     install_clasp_global,
     run_clasp_login,
     detect_clasp_environment,
 )
 from .auth.oauth_config import is_oauth_configured, get_oauth_config
 from .auth.credential_store import get_credential_store
-from .auth.google_auth import get_credentials, store_credentials, get_user_email_from_credentials
+from .auth.google_auth import store_credentials, get_user_email_from_credentials
 
 
 def detect_environment() -> Dict[str, Any]:
@@ -122,7 +117,11 @@ def get_recommended_choice(env: Dict[str, Any]) -> int:
         return 1
 
     # If OAuth 2.1 configured but no clasp, recommend server mode
-    if env["oauth_configured"] and env["oauth21_enabled"] and not env["clasp_installed"]:
+    if (
+        env["oauth_configured"]
+        and env["oauth21_enabled"]
+        and not env["clasp_installed"]
+    ):
         return 2
 
     # If both configured, recommend both
@@ -294,7 +293,9 @@ def setup_oauth(env: Dict[str, Any]) -> bool:
     print("OAuth 2.1 requires a Google Cloud project with OAuth credentials.\n")
     print("Setup steps:")
     print("1. Create a GCP project: https://console.cloud.google.com/projectcreate")
-    print("2. Enable APIs: https://console.cloud.google.com/flows/enableapi?apiid=script.googleapis.com,drive.googleapis.com,gmail.googleapis.com,sheets.googleapis.com,calendar-json.googleapis.com,docs.googleapis.com")
+    print(
+        "2. Enable APIs: https://console.cloud.google.com/flows/enableapi?apiid=script.googleapis.com,drive.googleapis.com,gmail.googleapis.com,sheets.googleapis.com,calendar-json.googleapis.com,docs.googleapis.com"
+    )
     print("3. Create OAuth client (Web application type)")
     print("4. Add redirect URI: http://localhost:8000/oauth2callback")
     print()

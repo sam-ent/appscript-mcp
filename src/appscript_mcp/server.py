@@ -419,6 +419,7 @@ async def generate_trigger_code(
         and run the setup function once to install the trigger.
     """
     from .tools import generate_trigger_code as _gen_trigger
+
     return await _gen_trigger(trigger_type, function_name, schedule)
 
 

@@ -8,8 +8,6 @@ import tempfile
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 
-import pytest
-
 
 class TestCredentialStore:
     """Tests for SecureCredentialStore."""
@@ -109,6 +107,7 @@ class TestClaspIntegration:
     def test_clasp_rc_path(self):
         """Test clasp RC path is correct."""
         from appscript_mcp.auth.google_auth import CLASP_RC_PATH
+
         assert CLASP_RC_PATH == Path.home() / ".clasprc.json"
 
     def test_is_clasp_authenticated_no_file(self):
@@ -137,11 +136,11 @@ class TestClaspIntegration:
                 "refresh_token": "test_refresh",
                 "scope": "https://www.googleapis.com/auth/script.projects",
                 "token_type": "Bearer",
-                "expiry_date": 1700000000000
+                "expiry_date": 1700000000000,
             }
         }
 
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump(mock_token_data, f)
             temp_path = f.name
 

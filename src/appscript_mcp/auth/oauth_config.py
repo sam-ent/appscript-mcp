@@ -42,7 +42,9 @@ class OAuthConfig:
         )
 
         # clasp configuration
-        self.clasp_enabled = os.getenv("APPSCRIPT_MCP_CLASP_ENABLED", "true").lower() == "true"
+        self.clasp_enabled = (
+            os.getenv("APPSCRIPT_MCP_CLASP_ENABLED", "true").lower() == "true"
+        )
 
         # Transport mode (will be set at runtime)
         self._transport_mode = "stdio"  # Default

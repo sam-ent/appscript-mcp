@@ -24,9 +24,9 @@ from google_auth_oauthlib.flow import Flow, InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.auth.exceptions import RefreshError
 
-from .scopes import get_current_scopes, SCOPES
+from .scopes import get_current_scopes
 from .credential_store import get_credential_store
-from .oauth_config import get_oauth_config, is_oauth_configured
+from .oauth_config import get_oauth_config
 
 logger = logging.getLogger(__name__)
 
@@ -154,9 +154,11 @@ def get_user_email_from_credentials(credentials: Credentials) -> Optional[str]:
         User's email address or None
     """
     # Try to get from id_token first
-    if hasattr(credentials, 'id_token') and credentials.id_token:
+    if hasattr(credentials, "id_token") and credentials.id_token:
         try:
-            decoded = jwt.decode(credentials.id_token, options={"verify_signature": False})
+            decoded = jwt.decode(
+                credentials.id_token, options={"verify_signature": False}
+            )
             return decoded.get("email")
         except Exception:
             pass
@@ -164,6 +166,7 @@ def get_user_email_from_credentials(credentials: Credentials) -> Optional[str]:
     # Fall back to userinfo API
     try:
         from googleapiclient.discovery import build
+
         service = build("oauth2", "v2", credentials=credentials)
         user_info = service.userinfo().get().execute()
         return user_info.get("email")
@@ -262,7 +265,9 @@ def get_credentials() -> Optional[Credentials]:
     return None
 
 
-def store_credentials(credentials: Credentials, user_email: Optional[str] = None) -> bool:
+def store_credentials(
+    credentials: Credentials, user_email: Optional[str] = None
+) -> bool:
     """
     Store credentials in the credential store.
 
@@ -433,7 +438,9 @@ def auth_interactive(scopes: Optional[list] = None, port: int = 8080) -> Credent
 # =============================================================================
 
 
-def get_service(service_name: str, version: str, credentials: Optional[Credentials] = None):
+def get_service(
+    service_name: str, version: str, credentials: Optional[Credentials] = None
+):
     """
     Get an authenticated Google API service.
 

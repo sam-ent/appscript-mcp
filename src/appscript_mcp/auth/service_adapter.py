@@ -19,7 +19,6 @@ import logging
 from functools import wraps
 from typing import Optional, Callable, Any
 
-from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 
 from .credential_store import get_credential_store
@@ -29,9 +28,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_service_for_user(
-    service_name: str,
-    version: str,
-    user_email: Optional[str] = None
+    service_name: str, version: str, user_email: Optional[str] = None
 ) -> Any:
     """
     Get an authenticated Google API service for a user.
@@ -74,6 +71,7 @@ def with_service(service_name: str, version: str):
         async def get_message(service, user_google_email: str, message_id: str):
             return service.users().messages().get(userId="me", id=message_id).execute()
     """
+
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         async def wrapper(*args, **kwargs):
@@ -98,6 +96,7 @@ def with_service(service_name: str, version: str):
             return await func(service, *args, **kwargs)
 
         return wrapper
+
     return decorator
 
 
