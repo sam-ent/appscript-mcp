@@ -26,8 +26,8 @@ This extension provides tools to manage Google Apps Script projects.
 
 Before using these tools, the user must authenticate with Google:
 
-1. Run `appscript-mcp auth` in terminal (if browser available)
-2. Or run `appscript-mcp auth --headless` for remote/SSH environments
+1. Run `gmcp auth` in terminal (if browser available)
+2. Or run `gmcp auth --headless` for remote/SSH environments
 
 If not authenticated, use **start_google_auth** to begin the OAuth flow, then **complete_google_auth** with the redirect URL.
 

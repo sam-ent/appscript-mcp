@@ -3,8 +3,8 @@
 ## Development Setup
 
 ```bash
-git clone https://github.com/sam-ent/appscript-mcp.git
-cd appscript-mcp
+git clone https://github.com/sam-ent/google-automation-mcp.git
+cd google-automation-mcp
 uv sync
 ```
 
