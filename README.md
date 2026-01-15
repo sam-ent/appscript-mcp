@@ -210,6 +210,15 @@ All other tools work without this manual step.
 
 Google enforces rate limits on the Apps Script API. If running many operations, you may encounter quota errors. See [Apps Script Quotas](https://developers.google.com/apps-script/guides/services/quotas) for details.
 
+## Roadmap
+
+- [ ] PyPI package (`pip install appscript-mcp`)
+- [ ] Claude Desktop one-click install (DXT)
+- [ ] Trigger management (time-based, event-driven)
+- [ ] Bound scripts support (Sheets, Docs, Forms)
+
+See [Issues](https://github.com/sam-ent/appscript-mcp/issues) to request features or report bugs.
+
 ## Development
 
 ### Run Tests
