@@ -106,29 +106,29 @@ class TestClaspIntegration:
 
     def test_clasp_rc_path(self):
         """Test clasp RC path is correct."""
-        from google_automation_mcp.auth.google_auth import CLASP_RC_PATH
+        from google_automation_mcp.auth.clasp import CLASP_RC_PATH
 
         assert CLASP_RC_PATH == Path.home() / ".clasprc.json"
 
     def test_is_clasp_authenticated_no_file(self):
         """Test clasp auth check when file doesn't exist."""
-        from google_automation_mcp.auth.google_auth import is_clasp_authenticated
+        from google_automation_mcp.auth.clasp import is_clasp_authenticated
 
-        with patch("google_automation_mcp.auth.google_auth.CLASP_RC_PATH") as mock_path:
+        with patch("google_automation_mcp.auth.clasp.CLASP_RC_PATH") as mock_path:
             mock_path.exists.return_value = False
             assert is_clasp_authenticated() is False
 
     def test_get_clasp_tokens_no_file(self):
         """Test getting clasp tokens when file doesn't exist."""
-        from google_automation_mcp.auth.google_auth import get_clasp_tokens
+        from google_automation_mcp.auth.clasp import get_clasp_tokens
 
-        with patch("google_automation_mcp.auth.google_auth.CLASP_RC_PATH") as mock_path:
+        with patch("google_automation_mcp.auth.clasp.CLASP_RC_PATH") as mock_path:
             mock_path.exists.return_value = False
             assert get_clasp_tokens() is None
 
     def test_get_clasp_tokens_valid(self):
         """Test getting clasp tokens from valid file."""
-        from google_automation_mcp.auth.google_auth import get_clasp_tokens
+        from google_automation_mcp.auth.clasp import get_clasp_tokens
 
         mock_token_data = {
             "token": {

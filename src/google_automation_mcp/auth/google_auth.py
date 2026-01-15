@@ -28,13 +28,7 @@ from .credential_store import get_credential_store
 from .oauth_config import get_oauth_config
 
 # Import clasp functions from dedicated module
-from .clasp import (
-    is_clasp_installed,
-    is_clasp_authenticated,
-    get_clasp_tokens,
-    run_clasp_login,
-    CLASP_RC_PATH,
-)
+from .clasp import get_clasp_tokens
 
 logger = logging.getLogger(__name__)
 
