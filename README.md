@@ -75,7 +75,14 @@ gemini extensions install github:sam-ent/appscript-mcp
 ```bash
 git clone https://github.com/sam-ent/appscript-mcp.git
 cd appscript-mcp
-uv sync  # or: pip install -e .
+uv tool install .  # installs 'appscript-mcp' command globally
+```
+
+Alternative (run from project directory without global install):
+```bash
+git clone https://github.com/sam-ent/appscript-mcp.git
+cd appscript-mcp
+uv sync  # then use 'uv run appscript-mcp' instead of 'appscript-mcp'
 ```
 
 ### 2. Setup Google Cloud (One-Time)
@@ -112,12 +119,15 @@ This gives the MCP permission to access your Google Apps Script and Drive APIs o
 **If you have a browser** (local machine, X11, etc.):
 ```bash
 appscript-mcp auth
+# or if you used 'uv sync' instead of 'uv tool install':
+uv run appscript-mcp auth
 ```
 Opens your browser, you consent, done.
 
 **If headless** (SSH, remote server, container):
 ```bash
 appscript-mcp auth --headless
+# or: uv run appscript-mcp auth --headless
 ```
 Prints a URL. Open it in any browser, consent, paste the redirect URL back.
 
